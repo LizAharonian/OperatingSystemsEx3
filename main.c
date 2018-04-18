@@ -55,7 +55,7 @@ int isSimilar(char * firstFile, char * secondFile2) {
         handleFailure();
     }
     FILE *file2 = fopen(secondFile2, "rb");
-    if (file1 == NULL) {
+    if (file2 == NULL) {
         handleFailure();
     }
     char buffer1[SIZE];
@@ -125,7 +125,7 @@ int isEqual(char * firstFile, char * secondFile2) {
         handleFailure();
     }
     FILE* file2 = fopen(secondFile2, "rb");
-    if (file1 ==NULL) {
+    if (file2 ==NULL) {
         handleFailure();
     }
     char buffer1[SIZE];
