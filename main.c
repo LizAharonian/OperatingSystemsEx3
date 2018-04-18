@@ -9,29 +9,35 @@
 #define TRUE 1
 #define FALSE 0
 #define ERROR "Error in system call"
-int isEqual(FILE* file1, FILE* file2);
+//define
+#define SIZE 1
+#define BULK 1
+#define SPACE 32
+#define A 65
+#define Z 90
+int isEqual(char * firstFile, char * secondFile2);
 
-int isSimilar(FILE* file1, FILE* file2);
+int isSimilar(char * firstFile, char * secondFile2);
 
 void handleFailure();
 
+char toLower(char character);
+
 int main(int argc, char** argv) {
 
-    if (argc!=2) {
+    if (argc!=3) {
         handleFailure();
 
     }
-    //open files
-    FILE* file1 = fopen(argv[1], "rb");
-    FILE* file2 = fopen(argv[2], "rb");
-    if (file1 ==NULL||file2==NULL) {
-        handleFailure();
-    }
-    if (isEqual(file1, file2)) {
+
+    if (isEqual(argv[1], argv[2])) {
+        printf("3");
         return 3;
-    } else if (isSimilar(file1, file2)) {
+    } else if (isSimilar(argv[1], argv[2])) {
+        printf("2");
         return 2;
     } else {
+        printf("1");
         return 1;
     }
 }
@@ -42,11 +48,101 @@ void handleFailure() {
     exit(Fail);
 }
 
-int isSimilar(FILE* file1, FILE* file2) {
+int isSimilar(char * firstFile, char * secondFile2) {
+    //open files
+    FILE *file1 = fopen(firstFile, "rb");
+    if (file1 == NULL) {
+        handleFailure();
+    }
+    FILE *file2 = fopen(secondFile2, "rb");
+    if (file1 == NULL) {
+        handleFailure();
+    }
+    char buffer1[SIZE];
+    char buffer2[SIZE];
+    int status;
+    //read each char by buffer
+    while (((status = fread(buffer1, sizeof(buffer1), BULK, file1)) != 0) &&
+           ((status = fread(buffer2, sizeof(buffer2), BULK, file2)) != 0)) {
+        if (status == Fail) {
+            handleFailure();
+        }
+        //lowerCase both chars
+        *buffer1 = toLower(*buffer1);
+        *buffer2 = toLower(*buffer2);
+        if ((*buffer1 == '\n' && *buffer2 == SPACE) ||
+            (*buffer1 == SPACE && *buffer2 == '\n')) {
+            continue;
+        }
+        //compare current chars
+        if (*buffer1 != *buffer2) {
+            while ((*buffer1 == SPACE || *buffer1 == '\n') &&
+                   (status = fread(buffer1, sizeof(buffer1), BULK, file1)) != 0) {
+                if (status == Fail) {
+                    handleFailure();
+                }
 
+            }
+            //lowerCase both chars
+            *buffer1 = toLower(*buffer1);
+            *buffer2 = toLower(*buffer2);
+            if (*buffer1 != *buffer2) {
+                return FALSE;
+            }
+
+            while ((*buffer2 == SPACE || *buffer2 == '\n') &&
+                   (status = fread(buffer2, sizeof(buffer2), BULK, file2)) != 0) {
+                if (status == Fail) {
+                    handleFailure();
+                }
+
+            }
+            //lowerCase both chars
+            *buffer1 = toLower(*buffer1);
+            *buffer2 = toLower(*buffer2);
+            if (*buffer1 != *buffer2) {
+                return FALSE;
+            }
+        }
+
+    }
+    return TRUE;
 }
 
-int isEqual(FILE* file1, FILE* file2) {
+char toLower(char character) {
+    printf("before: %c\n", character);
+    if (character>=A && character<=Z) {
+        character +=SPACE;
+    }
+    printf("after: %c\n", character);
+    return character;
+}
 
+int isEqual(char * firstFile, char * secondFile2) {
+    //open files
+    FILE* file1 = fopen(firstFile, "rb");
+    if (file1 ==NULL) {
+        handleFailure();
+    }
+    FILE* file2 = fopen(secondFile2, "rb");
+    if (file1 ==NULL) {
+        handleFailure();
+    }
+    char buffer1[SIZE];
+    char buffer2[SIZE];
+    int status;
+    //read each char by buffer
+    while (((status = fread(buffer1, sizeof(buffer1), BULK, file1))!=0 )&&
+            ((status =fread(buffer2, sizeof(buffer2), BULK, file2))!=0)) {
+        if (status ==Fail) {
+            handleFailure();
+        }
+        //compare current chars
+        if (!(*buffer1==*buffer2)) {
+            return FALSE;
+        }
+
+    }
+    return TRUE;
 }
 
