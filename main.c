@@ -22,7 +22,13 @@ void handleFailure();
 char toLower(char character);
 char ignoreSpacesAndLines(FILE* file, FILE* otherFile, char bufferChar);
 
-
+/**
+ * main function.
+ * runs the program.
+ * @param argc - number of command line args.
+ * @param argv - command line args.
+ * @return 1/2/3.
+ */
 int main(int argc, char** argv) {
     //validation on num of input args
     if (argc!=3) {
@@ -30,23 +36,30 @@ int main(int argc, char** argv) {
     }
     //classify the docs
     if (isEqual(argv[1], argv[2])) {
-        printf("3");
         return 3;
     } else if (isSimilar(argv[1], argv[2])) {
-        printf("2");
         return 2;
     } else {
-        printf("1");
         return 1;
     }
 }
 
+/**
+ * handleFailure function.
+ * prints error and exits the program.
+ */
 void handleFailure() {
     fprintf(stderr, ERROR);
     printf("\n");
     exit(Fail);
 }
-
+/**
+ * isSimilar function.
+ * check if firstFile and secondFile looks similar.
+ * @param firstFile - one of the documents to be checked.
+ * @param secondFile - one of the documents to be checked.
+ * @return FALSE or TRUE.
+ */
 int isSimilar(char * firstFile, char * secondFile) {
     //open files
     FILE *file1 = fopen(firstFile, "rb");
@@ -93,15 +106,13 @@ int isSimilar(char * firstFile, char * secondFile) {
     return TRUE;
 }
 
-char toLower(char character) {
-    printf("before: %c\n", character);
-    if (character>=A && character<=Z) {
-        character +=SPACE;
-    }
-    printf("after: %c\n", character);
-    return character;
-}
-
+/**
+ * isEqual function.
+ * checks if firstFile and secondFile looks the same.
+ * @param firstFile - one of the documents to be checked.
+ * @param secondFile - one of the documents to be checked.
+ * @return FALSE or TRUE.
+ */
 int isEqual(char * firstFile, char * secondFile) {
     //open files
     FILE* file1 = fopen(firstFile, "rb");
@@ -138,7 +149,14 @@ int isEqual(char * firstFile, char * secondFile) {
     return TRUE;
 }
 
-
+/**
+ * ignoreSpacesAndLines function.
+ * the function places bufferChar on char which differ from space or '\n'.
+ * @param file - file stream.
+ * @param otherFile - other fileStream.
+ * @param bufferChar - current buffer content.
+ * @return new val of buffer.
+ */
 char ignoreSpacesAndLines(FILE* file, FILE* otherFile, char bufferChar) {
     char buffer[SIZE];
     int status;
@@ -151,8 +169,18 @@ char ignoreSpacesAndLines(FILE* file, FILE* otherFile, char bufferChar) {
             fclose(otherFile);
             handleFailure();
         }
-
     }
     return *buffer;
 }
 
+/**
+ * toLower function.
+ * @param character - char to be lowercase.
+ * @return the lowercase char.
+ */
+char toLower(char character) {
+    if (character>=A && character<=Z) {
+        character +=SPACE;
+    }
+    return character;
+}
