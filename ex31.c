@@ -15,7 +15,9 @@
 #define SPACE 32
 #define A 65
 #define Z 90
-#define ERROR "Error in system call"
+#define ERROR "Error in system call\n"
+#define STDERR 2
+#define ERROR_SIZE 21
 
 //declarations
 int isEqual(char * firstFile, char * secondFile2);
@@ -53,8 +55,7 @@ int main(int argc, char **argv) {
  * prints error and exits the program.
  */
 void handleFailure() {
-    fprintf(stderr, ERROR);
-    printf("\n");
+    write(STDERR, ERROR, ERROR_SIZE);
     exit(Fail);
 }
 
